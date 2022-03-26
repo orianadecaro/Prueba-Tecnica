@@ -30,113 +30,122 @@ const Ejercicio6 = () => {
   };
 
   const eliminarProducto = (codigo) => {
-    const remove = productos.filter(item => item.id !== codigo);
+    const remove = productos.filter(item => item.codigo !== codigo);
     setProductos(remove);
   }
 
-  const buscarProducto = (e, codigo, descripcion) => {
-    e.preventDefault();
+  const buscarProducto = (e, buscar) => {
+    setBuscar(e)
 
-    const busqueda = productos.filter(item => item.codigo === codigo || item.descripcion === descripcion);
-    setResultado(busqueda)
-  }
-  return (
-    <Layout>
-      <div className='container mt-5'>
-        <h3 className='mb-5 text-center'>Plasmar en código la creación de un listado de productos con una búsqueda por descripción y código. Se valora manejo de estados entre
-          componentes y uso de hooks.
-        </h3>
-        <hr />
-        <div className='col-4'>
-          <h4 className='text-center'>Agregar Productos</h4>
-          <form onSubmit={agregarProducto}>
-            <input type='text'
-              className='form-control mb-2'
-              placeholder='Nombre producto'
-              onChange={e => setProducto(e.target.value)}
-              value={producto}
-            />
-            <input type='number'
-              className='form-control mb-2'
-              placeholder='Precio producto'
-              onChange={e => setPrecio(e.target.value)}
-              value={precio}
+    let oldList = productos.map(producto => {
+      return { producto: producto.producto, codigo: producto.codigo, descripcion: producto.descripcion, precio: producto.precio }
+    })
 
-            />
-            <input type='number'
-              className='form-control mb-2'
-              placeholder='Codigo producto'
-              onChange={e => setCodigo(e.target.value)}
-              value={codigo}
+    if (buscar !== 0) {
+      let newList = [];
+      newList = oldList.filter(product => { return { producto: product.codigo.search(product), producto: product.descripcion.search(product) } });
 
-            />
-            <input type='text'
-              className='form-control mb-2'
-              placeholder='Descripcion producto'
-              onChange={e => setDescripcion(e.target.value)}
-              value={descripcion}
+      setResultado(newList);
+    } else {
+      console.log('error')
+    }
 
-            />
-            <button className='btn btn-dark btn-block' type='submit' onClick={agregarProducto}>Agregar</button>
-          </form>
-        </div>
-        <div className='row mt-4'>
-          <div className='col-8'>
-            <h4 className="text-center"> Lista de Productos</h4>
-            <ul>
-              {
-                productos.length === 0 ? (
-                  <li className='list-group-item'>No hay productos</li>
-                ) : (
-                  productos.map((item, key) => {
-                    return (
-                      <li className='list-group-item' key={key}>Producto:{item.producto} - Precio:${item.precio} - Codigo:{item.codigo} - Descripcion:{item.descripcion}
-                        <button
-                          className='btn btn-sm btn-danger float-end mx-2'
-                          onClick={() => eliminarProducto(item.codigo)}
-                        >X
-                        </button>
-                      </li>
-                    )
-                  })
-                )
-              }
-            </ul>
-          </div>
-        </div>
-        <div className='row mt-4'>
-          <div className="col-8">
-            <h4 className='text-center'> Busqueda</h4>
-            <div className='input-group'>
-              <input
-                type='text'
-                className='form-control text-center '
-                placeholder='Buscar producto por descripcion o codigo'
-                onChange={e => setBuscar(e.target.value)}
-                value={buscar}
+    return (
+      <Layout>
+        <div className='container mt-5'>
+          <h3 className='mb-5 text-center'>Plasmar en código la creación de un listado de productos con una búsqueda por descripción y código. Se valora manejo de estados entre
+            componentes y uso de hooks.
+          </h3>
+          <hr />
+          <div className='col-4'>
+            <h4 className='text-center'>Agregar Productos</h4>
+            <form onSubmit={agregarProducto}>
+              <input type='text'
+                className='form-control mb-2'
+                placeholder='Nombre producto'
+                onChange={e => setProducto(e.target.value)}
+                value={producto}
               />
-              <button
-                className='btn btn-sm btn-info'
-                type='submit'
-                onClick={buscarProducto}
-              >Buscar
-              </button>
-            </div>
-            <ul>
-              {
-                resultado.length === 0 ? (
-                  <li className='list-group-item mt-3'>Resultado</li>
-                ) : (resultado.map((item, key) => {
-                  return (<li className='list-group-item' key={key}>{item.codigo} - {item.producto} - {item.precio} - {item.descripcion} </li>)
-                }))
+              <input type='number'
+                className='form-control mb-2'
+                placeholder='Precio producto'
+                onChange={e => setPrecio(e.target.value)}
+                value={precio}
 
-              }
-            </ul>
+              />
+              <input type='number'
+                className='form-control mb-2'
+                placeholder='Codigo producto'
+                onChange={e => setCodigo(e.target.value)}
+                value={codigo}
+
+              />
+              <input type='text'
+                className='form-control mb-2'
+                placeholder='Descripcion producto'
+                onChange={e => setDescripcion(e.target.value)}
+                value={descripcion}
+
+              />
+              <button className='btn btn-dark btn-block' type='submit' onClick={agregarProducto}>Agregar</button>
+            </form>
+          </div>
+          <div className='row mt-4'>
+            <div className='col-8'>
+              <h4 className="text-center"> Lista de Productos</h4>
+              <ul>
+                {
+                  productos.length === 0 ? (
+                    <li className='list-group-item'>No hay productos</li>
+                  ) : (
+                    productos.map((item, key) => {
+                      return (
+                        <li className='list-group-item' key={key}>Producto:{item.producto} - Precio:${item.precio} - Codigo:{item.codigo} - Descripcion:{item.descripcion}
+                          <button
+                            className='btn btn-sm btn-danger float-end mx-2'
+                            onClick={() => eliminarProducto(item.codigo)}
+                          >X
+                          </button>
+                        </li>
+                      )
+                    })
+                  )
+                }
+              </ul>
+            </div>
+          </div>
+          <div className='row mt-4'>
+            <div className="col-8">
+              <h4 className='text-center'> Busqueda</h4>
+              <div className='input-group'>
+                <input
+                  type='text'
+                  className='form-control text-center '
+                  placeholder='Buscar producto por descripcion o codigo'
+                  onChange={e => setBuscar(e.target.value)}
+                  value={buscar}
+                />
+                <button
+                  className='btn btn-sm btn-info'
+                  type='submit'
+                  onClick={buscarProducto}
+                >Buscar
+                </button>
+              </div>
+              <ul>
+                {
+                  resultado.length === 0 ? (
+                    <p className='list-group-item mt-3'>Sin Resultado</p>
+                  ) : (resultado.map((item1, key) => {
+                    return (<li className='list-group-item' key={key}>{item1.codigo} - {item1.descripcion} </li>)
+                  }))
+                }
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
-  )
-}
+      </Layout>
+    )
+  }
 
-export default Ejercicio6;
+  export default Ejercicio6;
